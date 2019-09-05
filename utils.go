@@ -15,18 +15,20 @@ func Unwrap(arr []interface{}, toValue interface{}) {
 		panic("toValue must be array")
 	}
 
-	newSlice := reflect.MakeSlice(v.Elem().Type(), 0, 0)
-	for _, ele := range arr {
-		newSlice = reflect.Append(newSlice, reflect.ValueOf(ele))
+	len := len(arr)
+	newSlice := reflect.MakeSlice(v.Elem().Type(), len, len)
+	for i, ele := range arr {
+		newSlice.Index(i).Set(reflect.ValueOf(ele))
 	}
-
 	ve.Set(newSlice)
 }
 
 func Wrap(val interface{}) (r []interface{}) {
 	v := reflect.ValueOf(val)
-	for i := 0; i< v.Len() ; i++ {
-		r = append(r, v.Index(i).Interface())
+	len := v.Len()
+	r = make([]interface{}, len, len)
+	for i := 0; i < len; i++ {
+		r[i] = v.Index(i).Interface()
 	}
 	return
 }
